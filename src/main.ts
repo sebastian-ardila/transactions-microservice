@@ -12,6 +12,8 @@ async function bootstrap() {
   const logger = app.get(Logger);
   app.useLogger(logger);
 
+  app.enableShutdownHooks();
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -36,7 +38,7 @@ async function bootstrap() {
     SwaggerModule.setup('docs', app, document);
   }
 
-  await app.listen(port);
+  await app.listen(port, '0.0.0.0');
   logger.log(`Application running on port ${port} [${nodeEnv}]`);
 }
 

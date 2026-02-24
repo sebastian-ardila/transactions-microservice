@@ -17,4 +17,14 @@ describe('HealthController', () => {
     expect(result.status).toBe('ok');
     expect(result.timestamp).toBeDefined();
   });
+
+  it('should return ok for liveness probe', () => {
+    const result = controller.live();
+    expect(result.status).toBe('ok');
+  });
+
+  it('should return ok for readiness probe', () => {
+    const result = controller.ready();
+    expect(result.status).toBe('ok');
+  });
 });

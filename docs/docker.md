@@ -23,6 +23,7 @@ FROM node:22-alpine AS production
 - Starts from a clean Alpine image (no build artifacts or devDependencies).
 - Installs only production dependencies with `npm ci --omit=dev`.
 - Copies the compiled `dist/` folder from the build stage.
+- Creates a non-root user (`appuser`) and runs the process as that user (Kubernetes security best practice).
 - Exposes port `3000` and runs `node dist/main.js` directly (no ts-node, no nest CLI overhead).
 
 ### Why multi-stage?

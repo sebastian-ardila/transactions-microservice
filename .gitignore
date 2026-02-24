@@ -6,3 +6,4 @@ node_modules/
 !eslint.config.mjs
 coverage/
 CLAUDE.md
+docs/requirements.md

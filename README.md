@@ -17,6 +17,7 @@ Microservice responsible for processing and managing financial transactions. Bui
 
 - Node.js 22+
 - npm 10+
+- PostgreSQL 16+ (for local development) — see [Local PostgreSQL Setup](docs/local-postgres-setup.md)
 - Docker and Docker Compose (for containerized setup)
 
 ## Getting Started
@@ -57,10 +58,12 @@ For more details see [Docker documentation](docs/docker.md).
 
 ### System
 
-| Method | Route   | Description        |
-|--------|---------|--------------------|
-| GET    | /health | Health check       |
-| GET    | /docs   | Swagger (dev only) |
+| Method | Route         | Description                   |
+|--------|---------------|-------------------------------|
+| GET    | /health       | General health check          |
+| GET    | /health/live  | Liveness probe (Kubernetes)   |
+| GET    | /health/ready | Readiness probe (Kubernetes)  |
+| GET    | /docs         | Swagger (dev only)            |
 
 ### Transactions
 
@@ -86,8 +89,13 @@ src/
 ├── app.module.ts            # Root module
 ├── config/                  # Environment and logger configuration
 ├── common/                  # Shared filters, pipes, utilities
+├── database/                # TypeORM + PostgreSQL connection
 └── modules/                 # Feature modules
-    └── health/              # Health check endpoint
+    ├── health/              # Health check endpoint
+    ├── users/               # User entity and module
+    │   └── entities/        # User entity
+    └── transactions/        # Transaction entity and module
+        └── entities/        # Transaction entity, TransactionType enum
 ```
 
 ## Environment Variables
@@ -111,4 +119,5 @@ Additional documentation is available in the [`docs/`](docs/) folder:
 | Document                                          | Description                              |
 |---------------------------------------------------|------------------------------------------|
 | [Docker](docs/docker.md)                          | Dockerfile and docker-compose details    |
+| [Local PostgreSQL Setup](docs/local-postgres-setup.md) | Configure PostgreSQL for local development |
 | [Validation Steps](docs/validation-steps.md)      | Pre-commit validation checklist          |

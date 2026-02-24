@@ -3,5 +3,11 @@
 ### Health Check
 GET {{host}}/health
 
+### Liveness Probe (Kubernetes)
+GET {{host}}/health/live
+
+### Readiness Probe (Kubernetes)
+GET {{host}}/health/ready
+
 ### Not Found (verify error response format)
-GET {{host}}/ruta-que-no-existe
+GET {{host}}/non-existent-route

@@ -1,0 +1,13 @@
+node_modules
+dist
+.git
+.env
+*.md
+!package*.json
+docs
+http
+coverage
+.editorconfig
+.prettierrc
+CLAUDE.md
+.claude
