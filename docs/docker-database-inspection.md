@@ -91,6 +91,16 @@ These work inside an interactive `psql` session:
 | `\x`          | Toggle expanded display for rows   |
 | `\q`          | Exit psql                          |
 
+## Reset database
+
+To wipe all data and start fresh (re-runs migrations on startup):
+
+```bash
+docker compose down -v && docker compose up --build
+```
+
+The `-v` flag removes the PostgreSQL volume, deleting all stored data. Migrations will recreate the tables automatically when the containers start.
+
 ## Troubleshooting
 
 ### `role "-d" does not exist`

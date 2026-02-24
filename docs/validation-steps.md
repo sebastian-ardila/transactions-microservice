@@ -61,7 +61,75 @@ curl http://localhost:3000/non-existent-route
 
 Expected: JSON response with shape `{ statusCode: 404, message, error, path, timestamp }`.
 
-## 8. Docker Compose
+## 8. Transaction endpoints
+
+```bash
+# Create a deposit (creates user if not exists)
+curl -s -X POST http://localhost:3000/transactions \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "transactionId": "a1b2c3d4-e5f6-4890-abcd-ef1234567890",
+    "userId": "b2c3d4e5-f6a7-4901-bcde-f12345678901",
+    "amount": 100,
+    "type": "deposit",
+    "timestamp": "2026-02-24T12:00:00.000Z"
+  }'
+```
+
+Expected: `201` with `{ transactionId, userId, amount, type, timestamp, balanceAfter: 100 }`.
+
+```bash
+# Get user balance
+curl -s http://localhost:3000/users/b2c3d4e5-f6a7-4901-bcde-f12345678901/balance
+```
+
+Expected: `200` with `{ userId, balance: 100 }`.
+
+```bash
+# Get transaction history
+curl -s http://localhost:3000/transactions/user/b2c3d4e5-f6a7-4901-bcde-f12345678901
+```
+
+Expected: `200` with array of transactions ordered by timestamp DESC.
+
+```bash
+# Idempotency: repeat the same deposit
+curl -s -X POST http://localhost:3000/transactions \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "transactionId": "a1b2c3d4-e5f6-4890-abcd-ef1234567890",
+    "userId": "b2c3d4e5-f6a7-4901-bcde-f12345678901",
+    "amount": 100,
+    "type": "deposit",
+    "timestamp": "2026-02-24T12:00:00.000Z"
+  }'
+```
+
+Expected: `201` with same response, balance unchanged (idempotent).
+
+```bash
+# Withdraw from non-existent user
+curl -s -X POST http://localhost:3000/transactions \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "transactionId": "c3d4e5f6-a7b8-4012-8def-123456789012",
+    "userId": "00000000-0000-4000-a000-000000000000",
+    "amount": 50,
+    "type": "withdraw",
+    "timestamp": "2026-02-24T12:00:00.000Z"
+  }'
+```
+
+Expected: `404` with `User not found`.
+
+```bash
+# Balance for non-existent user
+curl -s http://localhost:3000/users/00000000-0000-4000-a000-000000000000/balance
+```
+
+Expected: `404` with `User not found`.
+
+## 9. Docker Compose
 
 ```bash
 docker compose down && docker compose up --build

@@ -67,7 +67,16 @@ For more details see [Docker documentation](docs/docker.md).
 
 ### Transactions
 
-> Coming soon.
+| Method | Route                       | Description                  |
+|--------|-----------------------------|------------------------------|
+| POST   | /transactions               | Create a transaction         |
+| GET    | /transactions/user/:userId  | Get transaction history by user |
+
+### Users
+
+| Method | Route                   | Description         |
+|--------|-------------------------|---------------------|
+| GET    | /users/:userId/balance  | Get user balance    |
 
 ## Scripts
 
@@ -95,9 +104,10 @@ src/
 ├── database/                # TypeORM + PostgreSQL connection, migrations
 └── modules/                 # Feature modules
     ├── health/              # Health check endpoint
-    ├── users/               # User entity and module
+    ├── users/               # User entity, service, and controller
     │   └── entities/        # User entity
-    └── transactions/        # Transaction entity and module
+    └── transactions/        # Transaction entity, service, and controller
+        ├── dto/             # Request DTOs
         └── entities/        # Transaction entity, TransactionType enum
 ```
 
