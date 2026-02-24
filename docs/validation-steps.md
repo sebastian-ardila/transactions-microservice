@@ -67,18 +67,26 @@ Expected: JSON response with shape `{ statusCode: 404, message, error, path, tim
 docker compose down && docker compose up --build
 ```
 
-Expected: both `postgres` and `api` start without errors. Logs are structured JSON (production mode). TypeORM should log a successful database connection (no connection errors). Verify health:
+Expected: both `postgres` and `api` start without errors. Logs are structured JSON (production mode). TypeORM should log a successful database connection (no connection errors). Migrations run automatically on startup (`migrationsRun: true`). Verify health:
 
 ```bash
 curl http://localhost:3000/health
 ```
 
-Verify that TypeORM creates the `users` and `transactions` tables (check logs for `query: CREATE TABLE` or connect to the database):
+Verify that migrations created the `users` and `transactions` tables:
 
 ```bash
 docker compose exec postgres psql -U $DB_USER -d $DB_NAME -c "\dt"
 ```
 
-Expected: tables `users` and `transactions` are listed (along with any migration/TypeORM metadata tables).
+Expected: tables `users`, `transactions`, and `migrations` (TypeORM metadata) are listed.
+
+Verify migration was recorded:
+
+```bash
+docker compose exec postgres psql -U $DB_USER -d $DB_NAME -c "SELECT * FROM migrations"
+```
+
+Expected: one row for `CreateUsersAndTransactions1740400000000`.
 
 Stop with `docker compose down` when done.

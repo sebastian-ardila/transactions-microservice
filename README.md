@@ -80,6 +80,9 @@ For more details see [Docker documentation](docs/docker.md).
 | `npm run test:cov`   | Tests with coverage        |
 | `npm run lint`       | Run ESLint                 |
 | `npm run format`     | Run Prettier               |
+| `npm run migration:generate` | Generate a new migration from entity changes |
+| `npm run migration:run`      | Run pending migrations     |
+| `npm run migration:revert`   | Revert the last migration  |
 
 ## Project Structure
 
@@ -89,7 +92,7 @@ src/
 ├── app.module.ts            # Root module
 ├── config/                  # Environment and logger configuration
 ├── common/                  # Shared filters, pipes, utilities
-├── database/                # TypeORM + PostgreSQL connection
+├── database/                # TypeORM + PostgreSQL connection, migrations
 └── modules/                 # Feature modules
     ├── health/              # Health check endpoint
     ├── users/               # User entity and module
@@ -120,4 +123,5 @@ Additional documentation is available in the [`docs/`](docs/) folder:
 |---------------------------------------------------|------------------------------------------|
 | [Docker](docs/docker.md)                          | Dockerfile and docker-compose details    |
 | [Local PostgreSQL Setup](docs/local-postgres-setup.md) | Configure PostgreSQL for local development |
+| [Docker Database Inspection](docs/docker-database-inspection.md) | Inspect PostgreSQL tables in Docker |
 | [Validation Steps](docs/validation-steps.md)      | Pre-commit validation checklist          |

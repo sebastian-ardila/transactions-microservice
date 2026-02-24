@@ -1,3 +1,4 @@
+import { join } from 'path';
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -12,6 +13,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         url: config.get<string>('DATABASE_URL'),
         autoLoadEntities: true,
         synchronize: false,
+        migrations: [join(__dirname, 'migrations', '*.{ts,js}')],
+        migrationsRun: true,
       }),
     }),
   ],
