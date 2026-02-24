@@ -1,0 +1,7 @@
+@host = http://localhost:3000
+
+### Health Check
+GET {{host}}/health
+
+### Not Found (verify error response format)
+GET {{host}}/ruta-que-no-existe

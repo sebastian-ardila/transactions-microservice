@@ -1,0 +1,8 @@
+dist/
+node_modules/
+.env
+*.js.map
+*.d.ts
+!eslint.config.mjs
+coverage/
+CLAUDE.md
