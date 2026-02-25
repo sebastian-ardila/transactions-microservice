@@ -4,6 +4,7 @@ Microservice responsible for processing and managing financial transactions. Bui
 
 ## Table of Contents
 
+- [Respuestas a Preguntas Conceptuales - Refacil](#conceptual)
 - [Prerequisites](#prerequisites)
 - [Getting Started](#getting-started)
 - [Running with Docker](#running-with-docker)
@@ -14,6 +15,30 @@ Microservice responsible for processing and managing financial transactions. Bui
 - [Kubernetes](#kubernetes)
 - [Fraud Detection](#fraud-detection)
 - [Documentation](#documentation)
+
+## Respuestas a Preguntas Conceptuales - Refacil
+
+1. ¿Cómo manejarías picos altos de transacciones para
+garantizar escalabilidad?
+
+Esto ya se esta mitigando parcialmente a traves de las replicas de pods de kubernetes integradas en el manifiesto, alli se crearon 2 replicas y Kubernetes se encarga de hacer el balanceo de carga entre estos pods lo que garantiza un control de trafico un poco mas escalable, se pueden manejar mas replicas si se requiere teniendo cuidado de que el entorno donde se ejecuten soporte esas replicas ya que hay que asignar recursos a cada pod.
+
+Por otro lado, tambien se podria utilizas colas de jobs tipo redis con RabbitMQ, Kafka, BullMQ o lo que sea mas conveniente, de esta manera el cliente recibira una respuesta como cuando un banco le dice a uno que la transaccion esta en proceso y por detras lo que ocurre es que varios jobs se estan ejecutando saliendo de una cola uno a uno y esto garantiza que el sistema no se bloquee ya que se le ofrece un feedback al usuario de que algo se encuentra en ejecucion, por detras ya cada microservicio se encarga de ejecutar el job correspondiente.
+
+Tambien se podria usar caching de requests frecuentes que se hagan a los servicios, por ejemplo, consultar el balance que tiene un usuario en su cuenta podria ser una consulta repetitiva y se podria cachear, pero se tendria que invalidar ese caching si el ususario realiza una transaccion de deposito o retiro ya que el balance cambiaria, esto mejora los tiempos de respuesta en algunas cosas y bajaria picos por altas transacciones pero volveria el sistema mas complejo ya que hay que agregar reglas adicionales en varias transacciones.
+
+2. ¿Qué estrategias usarías para prevenir fraudes en un sistema
+de billetera digital?
+
+Lo primero es un sistema de alertas como el que implementé para el punto opcional extra de generar una respuesta atraves de logs para detectar muchas transacciones de monto alto que se generen en poco tiempo. Pero podriamos por ejemplo tambien detectar transacciones desde ubicaciones geograficas distintas en poco tiempo ya sea desde la misma cuenta o hacia la misma cuenta, o quiza transferencias a cuentas recien creadas. Creo que este tipo de reglas primero deben ser concertadas ya que podria ocasionar problemas de compliance si se gestiona mal, por ejemplo bloquear una cuenta por un comportamiento sospechoso en lugar de bloquear una cuenta por un comportamiento ilegal estipulado por la ley o los terminos de servicio de alguna de las partes involucradas.
+
+3. Si detectas lentitud en el procesamiento de transacciones por
+alta concurrencia, ¿cómo procederías para mejorar el
+rendimiento?
+
+Lo primero es revisar donde esta el problema, evaluar y diagnosticar antes de empezar a hacer algo por suposicion, ya que si corregimos una query porque suponemos que el problema esta alli podriamos duplicar esfuerzos innecesarios ya que quiza ese no era el problema. Asi que primero revisaria donde esta el problema y luego empiezo a generar una solucion apartir de alli con los involucrados correspondientes, ya que el problema podria estar en distintas capas de la aplicacion. Por ejemplo, si el problema esta en que una consulta esta tardando demasiado entonces quiza lo mejor sea optimizar las queries revisano si hay algo que se este gestionando mal o si es necesario ya sea normalizar datos, generar indices, etc. Segundo detectar si por ejemplo es una consulta que se podria cachear, revisar si hay acciones que se podrian encolar para no bloquear el flujo, ver si podemos escalar horizontalmente las replicas de nuestro sistema. Medir cuanto se demoraba el problema si es posible y cuanto se demora cuando se implemente la solucion para tener metricas de mejora continua y evidencia, esto ultimo en una botacora o documentacion nos permiten detectar donde podrian existir nuevos cuellos de botella en el futuro y prevenir si es posible.
+
+
 
 ## Prerequisites
 
