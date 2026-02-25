@@ -158,3 +158,28 @@ docker compose exec postgres psql -U $DB_USER -d $DB_NAME -c "SELECT * FROM migr
 Expected: one row for `CreateUsersAndTransactions1740400000000`.
 
 Stop with `docker compose down` when done.
+
+## 10. Kubernetes manifests (optional — requires Kubernetes enabled)
+
+```bash
+# Build the image
+docker build -t transactions-api .
+
+# Apply manifests
+kubectl apply -f k8s/
+
+# Verify pods are Running
+kubectl get pods -l app=transactions-api
+
+# Verify the service exists
+kubectl get svc transactions-api
+
+# Port-forward and test health
+kubectl port-forward svc/transactions-api 3000:80 &
+curl http://localhost:3000/health
+
+# Cleanup
+kubectl delete -f k8s/
+```
+
+Expected: two pods reach `Running` status, service is created, health endpoint returns `{"status":"ok","timestamp":"..."}`.

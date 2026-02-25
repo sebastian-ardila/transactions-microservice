@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: transactions-api-config
+  labels:
+    app: transactions-api
+data:
+  NODE_ENV: 'production'
+  PORT: '3000'
+  DB_NAME: 'transactions_db'
+  DB_PORT: '5432'

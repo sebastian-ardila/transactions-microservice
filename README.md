@@ -11,6 +11,7 @@ Microservice responsible for processing and managing financial transactions. Bui
 - [Scripts](#scripts)
 - [Project Structure](#project-structure)
 - [Environment Variables](#environment-variables)
+- [Kubernetes](#kubernetes)
 - [Documentation](#documentation)
 
 ## Prerequisites
@@ -53,6 +54,23 @@ This starts:
 - **postgres** at `localhost:5432`
 
 For more details see [Docker documentation](docs/docker.md).
+
+## Kubernetes
+
+Kubernetes manifests are in the [`k8s/`](k8s/) directory (Deployment, Service, ConfigMap, Secret). To deploy locally:
+
+```bash
+# Build the image
+docker build -t transactions-api .
+
+# Apply manifests
+kubectl apply -f k8s/
+
+# Access via port-forward
+kubectl port-forward svc/transactions-api 3000:80
+```
+
+For the full setup guide see [Kubernetes Deployment](docs/kubernetes.md).
 
 ## API Endpoints
 
@@ -134,4 +152,5 @@ Additional documentation is available in the [`docs/`](docs/) folder:
 | [Docker](docs/docker.md)                          | Dockerfile and docker-compose details    |
 | [Local PostgreSQL Setup](docs/local-postgres-setup.md) | Configure PostgreSQL for local development |
 | [Docker Database Inspection](docs/docker-database-inspection.md) | Inspect PostgreSQL tables in Docker |
+| [Kubernetes Deployment](docs/kubernetes.md)        | Deploy on Kubernetes (Docker Desktop / Minikube) |
 | [Validation Steps](docs/validation-steps.md)      | Pre-commit validation checklist          |
