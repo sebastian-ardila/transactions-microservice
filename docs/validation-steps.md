@@ -32,7 +32,7 @@ Expected: all test suites and tests pass.
 npm run test:e2e
 ```
 
-Expected: all 23 e2e tests pass (health, transactions, error cases, idempotency, validation).
+Expected: all 24 e2e tests pass (health, transactions, error cases, idempotency, validation, fraud detection).
 
 ## 5. Start in development mode
 
@@ -167,7 +167,29 @@ Expected: one row for `CreateUsersAndTransactions1740400000000`.
 
 Stop with `docker compose down` when done.
 
-## 11. Kubernetes manifests (optional — requires Kubernetes enabled)
+## 11. Fraud detection
+
+Create 3+ deposits with amount > 1000 in quick succession for the same user:
+
+```bash
+USER_ID="b2c3d4e5-f6a7-4901-bcde-f12345678901"
+for i in 1 2 3; do
+  curl -s -X POST http://localhost:3000/transactions \
+    -H 'Content-Type: application/json' \
+    -d "{
+      \"transactionId\": \"$(uuidgen | tr '[:upper:]' '[:lower:]')\",
+      \"userId\": \"$USER_ID\",
+      \"amount\": 1500,
+      \"type\": \"deposit\",
+      \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%S.000Z)\"
+    }"
+  echo
+done
+```
+
+Expected: all transactions succeed with `201`. Application logs show a `WARN` message containing `Fraud alert: userId=...` after the 3rd transaction.
+
+## 12. Kubernetes manifests (optional — requires Kubernetes enabled)
 
 ```bash
 # Build the image

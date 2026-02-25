@@ -6,6 +6,7 @@ import { TransactionsService } from './transactions.service';
 import { Transaction, TransactionType } from './entities';
 import { User } from '../users/entities/user.entity';
 import { CreateTransactionDto } from './dto';
+import { FraudService } from '../fraud';
 
 describe('TransactionsService', () => {
   let service: TransactionsService;
@@ -22,6 +23,10 @@ describe('TransactionsService', () => {
     save: jest.Mock;
     getRepository: jest.Mock;
     createQueryBuilder: jest.Mock;
+  };
+
+  const mockFraudService = {
+    checkFraud: jest.fn().mockResolvedValue(undefined),
   };
 
   const mockDataSource = {
@@ -51,6 +56,7 @@ describe('TransactionsService', () => {
         TransactionsService,
         { provide: getRepositoryToken(Transaction), useValue: mockTransactionsRepository },
         { provide: DataSource, useValue: mockDataSource },
+        { provide: FraudService, useValue: mockFraudService },
       ],
     }).compile();
 

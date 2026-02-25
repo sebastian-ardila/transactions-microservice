@@ -10,4 +10,9 @@ export const envValidationSchema = Joi.object({
   DB_NAME: Joi.string().required(),
   DB_PORT: Joi.number().default(5432),
   DATABASE_URL: Joi.string().required(),
+
+  // Fraud detection (optional — alert-only, does not block transactions)
+  FRAUD_TIME_WINDOW_MINUTES: Joi.number().default(5),
+  FRAUD_MAX_TRANSACTIONS: Joi.number().default(3),
+  FRAUD_AMOUNT_THRESHOLD: Joi.number().default(1000),
 });

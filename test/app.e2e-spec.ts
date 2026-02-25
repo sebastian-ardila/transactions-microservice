@@ -12,6 +12,7 @@ import { HealthModule } from '../src/modules/health';
 import { UsersModule } from '../src/modules/users';
 import { TransactionsModule } from '../src/modules/transactions';
 import { AllExceptionsFilter } from '../src/common/filters';
+import { FraudModule } from '../src/modules/fraud';
 
 import { SelectQueryBuilder } from 'typeorm';
 
@@ -75,6 +76,7 @@ describe('App (e2e)', () => {
         HealthModule,
         UsersModule,
         TransactionsModule,
+        FraudModule,
       ],
     }).compile();
 
@@ -437,6 +439,44 @@ describe('App (e2e)', () => {
 
     it('GET /transactions/user/:userId with invalid UUID → 400', () => {
       return request(app.getHttpServer()).get('/transactions/user/not-a-uuid').expect(400);
+    });
+  });
+
+  // ---------------------------------------------------------------------------
+  // Fraud detection
+  // ---------------------------------------------------------------------------
+
+  describe('Fraud detection', () => {
+    it('should process transactions normally even when fraud threshold is met', async () => {
+      const userId = randomUUID();
+
+      // Create 3 high-amount transactions (meets default threshold of 3 txns > 1000 in 5 min)
+      for (let i = 0; i < 3; i++) {
+        await request(app.getHttpServer())
+          .post('/transactions')
+          .send({
+            transactionId: randomUUID(),
+            userId,
+            amount: 1500,
+            type: 'deposit',
+            timestamp: new Date().toISOString(),
+          })
+          .expect(201);
+      }
+
+      // The 4th transaction should still succeed (fraud is alert-only, not blocking)
+      const res = await request(app.getHttpServer())
+        .post('/transactions')
+        .send({
+          transactionId: randomUUID(),
+          userId,
+          amount: 1500,
+          type: 'deposit',
+          timestamp: new Date().toISOString(),
+        })
+        .expect(201);
+
+      expect(res.body.balanceAfter).toBe(6000);
     });
   });
 });

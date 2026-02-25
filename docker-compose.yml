@@ -22,6 +22,9 @@ services:
       DB_NAME: ${DB_NAME:-transactions_db}
       DB_PORT: ${DB_PORT:-5432}
       DATABASE_URL: postgresql://${DB_USER:-postgres}:${DB_PASSWORD:-postgres}@postgres:5432/${DB_NAME:-transactions_db}
+      FRAUD_TIME_WINDOW_MINUTES: ${FRAUD_TIME_WINDOW_MINUTES:-5}
+      FRAUD_MAX_TRANSACTIONS: ${FRAUD_MAX_TRANSACTIONS:-3}
+      FRAUD_AMOUNT_THRESHOLD: ${FRAUD_AMOUNT_THRESHOLD:-1000}
     depends_on:
       - postgres
 

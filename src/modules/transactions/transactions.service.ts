@@ -5,6 +5,7 @@ import { Transaction } from './entities';
 import { TransactionType } from './entities';
 import { User } from '../users/entities/user.entity';
 import { CreateTransactionDto } from './dto';
+import { FraudService } from '../fraud';
 
 /** Response shape for a created transaction. */
 export interface TransactionResponse {
@@ -25,6 +26,7 @@ export class TransactionsService {
     @InjectRepository(Transaction)
     private readonly transactionsRepository: Repository<Transaction>,
     private readonly dataSource: DataSource,
+    private readonly fraudService: FraudService,
   ) {}
 
   /** Creates a transaction with atomic balance update. Idempotent on `transactionId`. */
@@ -98,6 +100,9 @@ export class TransactionsService {
       this.logger.log(
         `Transaction created: transactionId=${dto.transactionId}, userId=${dto.userId}, type=${dto.type}, amount=${dto.amount}`,
       );
+
+      // 8. Fraud detection (alert-only, does not block the transaction)
+      await this.fraudService.checkFraud(dto.userId, manager);
 
       return this.toResponse(transaction, updatedUser.balance);
     });
