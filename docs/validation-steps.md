@@ -2,6 +2,8 @@
 
 These steps **must pass** before pushing any commit. Run them in order.
 
+> **Note:** Steps 1–4 (build, lint, unit tests, e2e tests) also run automatically via GitHub Actions on every push to `main` and on every pull request targeting `main`. See `.github/workflows/ci.yml`.
+
 ## 1. Build
 
 ```bash

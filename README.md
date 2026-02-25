@@ -1,5 +1,7 @@
 # Transactions Microservice
 
+[![CI](https://github.com/sebastian-ardila/transactions-microservice/actions/workflows/ci.yml/badge.svg)](https://github.com/sebastian-ardila/transactions-microservice/actions/workflows/ci.yml)
+
 Microservice responsible for processing and managing financial transactions. Built with NestJS and TypeScript.
 
 ## Table of Contents
