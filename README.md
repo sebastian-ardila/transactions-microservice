@@ -105,6 +105,7 @@ For the full setup guide see [Kubernetes Deployment](docs/kubernetes.md).
 | `npm run start:prod` | Run production build       |
 | `npm test`           | Run tests                  |
 | `npm run test:cov`   | Tests with coverage        |
+| `npm run test:e2e`   | Integration tests (e2e)    |
 | `npm run lint`       | Run ESLint                 |
 | `npm run format`     | Run Prettier               |
 | `npm run migration:generate` | Generate a new migration from entity changes |

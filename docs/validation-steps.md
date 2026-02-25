@@ -26,7 +26,15 @@ npm test
 
 Expected: all test suites and tests pass.
 
-## 4. Start in development mode
+## 4. Integration tests (e2e)
+
+```bash
+npm run test:e2e
+```
+
+Expected: all 23 e2e tests pass (health, transactions, error cases, idempotency, validation).
+
+## 5. Start in development mode
 
 ```bash
 npm run start:dev
@@ -34,7 +42,7 @@ npm run start:dev
 
 Expected: log shows `Application running on port 3000 [development]`, no errors.
 
-## 5. Health endpoints
+## 6. Health endpoints
 
 ```bash
 curl http://localhost:3000/health
@@ -47,13 +55,13 @@ Expected:
 - `/health/live` → `{"status":"ok"}`
 - `/health/ready` → `{"status":"ok"}`
 
-## 6. Swagger available in dev
+## 7. Swagger available in dev
 
 Open `http://localhost:3000/docs` in browser.
 
 Expected: Swagger UI loads with all documented endpoints.
 
-## 7. Error response format
+## 8. Error response format
 
 ```bash
 curl http://localhost:3000/non-existent-route
@@ -61,7 +69,7 @@ curl http://localhost:3000/non-existent-route
 
 Expected: JSON response with shape `{ statusCode: 404, message, error, path, timestamp }`.
 
-## 8. Transaction endpoints
+## 9. Transaction endpoints
 
 ```bash
 # Create a deposit (creates user if not exists)
@@ -129,7 +137,7 @@ curl -s http://localhost:3000/users/00000000-0000-4000-a000-000000000000/balance
 
 Expected: `404` with `User not found`.
 
-## 9. Docker Compose
+## 10. Docker Compose
 
 ```bash
 docker compose down && docker compose up --build
@@ -159,7 +167,7 @@ Expected: one row for `CreateUsersAndTransactions1740400000000`.
 
 Stop with `docker compose down` when done.
 
-## 10. Kubernetes manifests (optional — requires Kubernetes enabled)
+## 11. Kubernetes manifests (optional — requires Kubernetes enabled)
 
 ```bash
 # Build the image
